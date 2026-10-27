@@ -37,9 +37,10 @@ jobs:
             "MERCADOPAGO_ACCESS_TOKEN=${{ secrets.MERCADOPAGO_ACCESS_TOKEN }}" \
             "NGROK_URL=${{ secrets.NGROK_URL }}" \
             "PORT=3000" \
-            "VITE_API_URL=https://moonlight.local/" \
+            "VITE_API_URL=https://moonlight.local" \
             "VITE_USE_MOCK=false" \
             "VITE_MP_PUBLIC_KEY=${{ secrets.VITE_MP_PUBLIC_KEY }}" \
+            "RUN_SEED=true" \
           > .env
 
       - name: Instalar mkcert e gerar certificados
@@ -58,35 +59,6 @@ jobs:
 
       - name: Subir Docker Compose
         run: docker compose up -d --build
-
-      - name: Aguardar MySQL ficar pronto
-        env:
-          ROOT_PASS: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-        run: |
-          echo "Aguardando MySQL..."
-          timeout 120 bash -c \
-            "until docker compose exec -T database mysql -u root -p\${ROOT_PASS} -e 'SELECT 1' > /dev/null 2>&1; \
-            do sleep 3; echo 'Aguardando MySQL...'; done"
-          echo "MySQL pronto!"
-
-      - name: Aguardar seed do banco
-        env:
-          ROOT_PASS: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          DB_NAME: ${{ secrets.MYSQL_DATABASE_NAME }}
-        run: |
-          echo "Aguardando seed do banco..."
-          timeout 120 bash -c '
-            until docker compose exec -T database mysql \
-              -u root \
-              -p'"${ROOT_PASS}"' \
-              -N -e "SELECT COUNT(*) FROM \`${DB_NAME}\`.\`user\` WHERE email = '\''dominic@familia.com'\'';" \
-              | grep -q "^1$"
-            do
-              sleep 3
-              echo "Aguardando usuário admin..."
-            done
-          '
-          echo "Seed carregada com sucesso!"
 
       - name: Aguardar https
         run: |

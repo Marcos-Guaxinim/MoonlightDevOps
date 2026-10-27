@@ -1,3 +1,16 @@
+# ============================================================
+# BLOCO REUTILIZÁVEL (YAML Anchor)
+# ============================================================
+# Isso NÃO cria nenhum serviço.
+# Serve apenas para guardar configurações que serão reaproveitadas.
+# O "x-" é uma convenção do Docker Compose (extension field).
+# O "&db-env" cria um nome (âncora) para esse bloco.
+x-db-env: &db-env
+  DB_HOST: ${DB_HOST}
+  DB_USER: ${DB_USER}
+  DB_DATABASE_NAME: ${DB_DATABASE_NAME}
+  DB_PASSWORD: ${DB_PASSWORD}
+
 services:
   database:
     image: mysql:8
@@ -9,9 +22,29 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - db-data:/var/lib/mysql
-      - ./database_arquives/moonlight.sql:/docker-entrypoint-initdb.d/01-moonlight.sql:ro
-    networks:
-      - db_network
+    healthcheck:
+      # Testa se o MySQL está realmente pronto para receber conexões
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks: [db_network]
+
+  migrate:
+    build:
+      context: ./Moonlight_Backend
+      dockerfile: Dockerfile
+    container_name: migrate_service
+    restart: "no"
+    # Executa as migrations e, se RUN_SEED=true, também roda o seed
+    command: sh -c 'npm run migrate && if [ "$$RUN_SEED" = "true" ]; then npm run seed; fi'
+    environment:
+      <<: *db-env
+      RUN_SEED: ${RUN_SEED:-false} # Padrão = false (só roda seed se for true)
+    depends_on:
+      database:
+        condition: service_healthy # Só começa quando o MySQL estiver saudável
+    networks: [db_network]
 
   backend:
     build:
@@ -20,20 +53,18 @@ services:
     container_name: backend_service
     restart: unless-stopped
     environment:
-      DB_HOST: database
-      DB_USER: ${DB_USER}
-      DB_DATABASE_NAME: ${DB_DATABASE_NAME}
-      DB_PASSWORD: ${DB_PASSWORD}
+      <<: *db-env
       NGROK_URL: ${NGROK_URL}
       MERCADOPAGO_ACCESS_TOKEN: ${MERCADOPAGO_ACCESS_TOKEN}
       JWT_SECRET: ${JWT_SECRET}
     expose:
       - "3000"
+    volumes:
+      - uploads-data:/Moonlight_Backend/uploads
     depends_on:
-      - database
-    networks:
-      - proxy_network
-      - db_network
+      migrate:
+        condition: service_completed_successfully # Só sobe depois que o migrate terminou com sucesso
+    networks: [proxy_network, db_network]
 
   frontend:
     build:
@@ -74,3 +105,4 @@ networks:
 
 volumes:
   db-data:
+  uploads-data:
