@@ -141,18 +141,6 @@ Utiliza a imagem oficial do MySQL 8 e é responsável pela persistência dos dad
 
 Todas preenchidas via `.env`, sem hardcode no Compose.
 
-#### Inicialização automática do banco
-
-A imagem `mysql:8` executa automaticamente scripts `.sql`, `.sql.gz` ou `.sh` presentes em:
-
-```
-/docker-entrypoint-initdb.d
-```
-
-No projeto, o arquivo `database_arquives/moonlight.sql` é montado nesse diretório. Na primeira criação do container, o MySQL cria o banco, o usuário e executa o script automaticamente — sem necessidade de import manual.
-
-> **Importante:** esse comportamento ocorre apenas quando o volume `db-data` ainda não existe ou está vazio. Se o volume já tiver sido criado anteriormente, o script **não** será executado novamente.
-
 Para forçar uma nova carga inicial:
 
 ```bash
