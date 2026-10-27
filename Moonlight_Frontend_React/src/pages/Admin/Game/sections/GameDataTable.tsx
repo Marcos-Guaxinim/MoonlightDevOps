@@ -11,34 +11,25 @@ import { useGameTable } from "../../../../hooks/tables/useGameTable";
 import { useGameFilters } from "../../../../hooks/filters/admin/useGameFilters";
 import { GameFilterSideBar } from "./GameFilterSideBar";
 
-type GameDataTableProps = {
-  category?: string;
-  launch_date_from?: string;
-  launch_date_to?: string;
-  price_min?: number;
-  price_max?: number;
-  active?: boolean;
-};
 
-export function GameDataTable(props: GameDataTableProps) {
+export function GameDataTable() {
   const { filters } = useGameFilters();
   const { updateURLParam } = useUpdateUrlParam();
   const [title, setTitle] = useState(filters.title ?? "");
 
   const query: GamePaginatedQueryPayload = useMemo(() => ({
-      page: 1,
-      limit: 5,
-      random: false,
-      title: filters.title,
-      category: props.category,
-      launch_date_from: props.launch_date_from,
-      launch_date_to: props.launch_date_to,
-      price_min: props.price_min,
-      price_max: props.price_max,
-      active: props.active
-  }), [props, filters.title]);
+    limit: 5,
+    random: false,
+    title: filters.title,
+    category: filters.category,
+    launch_date_from: filters.launch_date_from,
+    launch_date_to: filters.launch_date_to,
+    price_min: filters.price_min,
+    price_max: filters.price_max,
+    active: filters.active
+  }), [filters.category, filters.launch_date_from, filters.launch_date_to, filters.price_max, filters.price_min, filters.title, filters.active]);
 
-  const {games, isLoading, refetch, onPageChange, totalRows} = useFetchGamesTable(query);
+  const {games, isLoading, refetch, internalPage, setInternalPage, totalRows} = useFetchGamesTable(query);
   const {GameColumns, confirmDeleteId, setConfirmDeleteId, handleDelete} = useGameTable(refetch);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -97,7 +88,9 @@ export function GameDataTable(props: GameDataTableProps) {
               </Button>
             </div>
           }
-          onPageChange={onPageChange}
+          pageSize={query.limit}
+          currentPage={internalPage}
+          onPageChange={setInternalPage}
           totalRows={totalRows}
         />
     </>

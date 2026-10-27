@@ -8,7 +8,7 @@ import { AuthTabs } from "../../../../components/common/Forms/AuthTabs";
 function RegisterPage() {
 
     return (
-          <main className="p-24 bg-gradient-to-b from-night-soft via-night-soft to-night flex items-center justify-center">
+          <main className="p-24 bg-gradient-to-b from-base-soft via-base-soft to-base flex items-center justify-center">
             {/* Fundo decorativo */}
               <BackgroundCircle />
 

@@ -11,7 +11,7 @@ type ConfirmModalProps = {
 export function ConfirmModal({ icon, title, message, onConfirm, onCancel }: ConfirmModalProps) {
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fade-in">
-      <div className="bg-night-soft border border-white/10 rounded-xl p-8 w-[340px] flex flex-col gap-6">
+      <div className="bg-base-soft border border-white/10 rounded-xl p-8 w-[340px] flex flex-col gap-6">
 
         <div className="flex flex-col gap-2">
           {icon}

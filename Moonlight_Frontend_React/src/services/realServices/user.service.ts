@@ -4,13 +4,10 @@ import type { UpdateMeResponseDTO, UserResponseDTO } from "../../@types/user/use
 import type { UpdateMePayload, UserPaginatedQueryPayload, UserPayload } from "../../@types/user/user.payload";
 import { sanitizeData } from "../../utils/sanitizer/sanitizer";
 import { api } from "../api";
-import { createUserMock, fetchUserByIdMock, fetchUsersMock, updateMeMock } from "../fakeServices/user.fakeservice";
+import { createUserMock, fetchUserByIdMock, updateMeMock } from "../fakeServices/user.fakeservice";
 
 
 export async function fetchUsersPaginated(query: UserPaginatedQueryPayload): Promise<PaginatedResponse<UserResponseDTO>> {
-    if (import.meta.env.VITE_USE_MOCK === "true") {
-        return fetchUsersMock(query.page, query.limit);
-    }
 
     const response = await api.get(`/api/users/pag`, { params: query });
     return response.data;
@@ -29,6 +26,7 @@ export async function createUser(data: UserPayload): Promise<ApiResponse>{
     if (import.meta.env.VITE_USE_MOCK === "true") {
         return createUserMock(cleanData);
     }
+    console.log(cleanData);
     const response = await api.post(`/api/users`, cleanData);
     return response.data;
 }

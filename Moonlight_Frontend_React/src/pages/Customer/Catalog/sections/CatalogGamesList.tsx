@@ -1,11 +1,10 @@
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { Button } from "../../../../components/common/Generic/Button/Button";
-import { GameCard } from "../../../../components/common/Generic/GameCard/GameCard";
-import { useCart } from "../../../../hooks/cart/useCart";
 import { useFetchPaginatedGames } from "../../../../hooks/fetchItems/store/useFetchPaginatedGames";
-import { LibraryContext } from "../../../../hooks/library/useLibrary";
 import { getRandomSeed } from "../../../../utils/getRandomSeed";
 import type { GamePaginatedQueryPayload } from "../../../../@types/game/game.payload";
+import { Spinner } from "../../../../components/common/Generic/Spinner";
+import { GameList } from "../../../../components/common/Generic/GameList/GameList";
 
 type CatalogGamesListProps = {
   title?: string;
@@ -33,9 +32,15 @@ export function CatalogGamesList(props: CatalogGamesListProps) {
     [props],
   );
 
-  const { games, hasMore, loadMore } = useFetchPaginatedGames(query);
-  const { addItemToCart, removeItemFromCart, items } = useCart();
-  const { isOwned } = useContext(LibraryContext);
+  const { games, hasMore, loadMore, isLoading } = useFetchPaginatedGames(query);
+  let conteudo;
+  if (isLoading) {
+    conteudo = <Spinner />;
+  } else if (games.length === 0) {
+    conteudo = <p>Nenhum jogo encontrado.</p>
+  } else {
+    conteudo = <GameList games={games}/>
+  }
 
   return (
     <section className="px-4 pt-8 w-full">
@@ -43,47 +48,7 @@ export function CatalogGamesList(props: CatalogGamesListProps) {
         <div className="mb-5">
           <h1 className="text-2xl">Resultado da Pesquisa:</h1>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {games?.map((game) => {
-            const alreadyInCart = items.some(
-              (cartItem) => cartItem.id_game === game.id_game,
-            );
-            const cartItem = {
-              id_game: game.id_game!,
-              title: game.title,
-              price: game.price,
-              image: game.image,
-              categories: game.categories,
-            };
-
-            return (
-              <GameCard
-                game={game}
-                onCart={() =>
-                  alreadyInCart
-                    ? removeItemFromCart(game.id_game!)
-                    : addItemToCart(cartItem)
-                }
-                onBuy={() => addItemToCart(cartItem, "cart")}
-                gamePage={`/games/${game.id_game}`}
-                isAlreadyInCart={alreadyInCart}
-                key={game.id_game}
-                isOwned={isOwned(game.id_game!)}
-                actions={
-                  isOwned(game.id_game!) ? (
-                    <Button
-                      variant="cta"
-                      className="rounded-md p-2 w-full animate-glow-cta"
-                      onClick={() => window.open(game.link)}
-                    >
-                      Baixar
-                    </Button>
-                  ) : undefined
-                }
-              />
-            );
-          })}
-        </div>
+        {conteudo}
         <div className="p-8 w-full">
           {hasMore ? (
             <Button

@@ -4,7 +4,7 @@ import type { ApiResponse } from "../../@types/common/apiResponse";
 import type { PaginatedResponse } from "../../@types/common/pagination";
 import { sanitizeData } from "../../utils/sanitizer/sanitizer";
 import { api } from "../api";
-import { fetchCategoryByIdMock, fetchCategoryMock, fetchPaginatedCategoryMock } from "../fakeServices/category.fakeservice";
+import { fetchCategoryByIdMock, fetchCategoryMock } from "../fakeServices/category.fakeservice";
 
 export async function fetchCategories(): Promise<CategoryResponseDTO[]> {
     if (import.meta.env.VITE_USE_MOCK === "true") {
@@ -16,9 +16,6 @@ export async function fetchCategories(): Promise<CategoryResponseDTO[]> {
 }
 
 export async function fetchPaginatedCategories(query: CategoryPaginatedQueryPayload): Promise<PaginatedResponse<CategoryResponseDTO>> {
-    if (import.meta.env.VITE_USE_MOCK === "true") {
-        return fetchPaginatedCategoryMock(query.page, query.limit);
-    }
 
     const response = await api.get(`/api/categories/pag`, { params: query });
     return response.data;

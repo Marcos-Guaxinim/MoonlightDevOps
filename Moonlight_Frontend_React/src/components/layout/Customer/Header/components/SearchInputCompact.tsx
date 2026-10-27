@@ -25,7 +25,7 @@ export function SearchInputCompact({
 
   return (
     <div
-      className={`bg-night-soft flex items-center w-full overflow-hidden transition-all duration-200 active:scale-[0.99]`}
+      className={`bg-base-soft flex items-center w-full overflow-hidden transition-all duration-200 active:scale-[0.99]`}
     >
       <div className="w-12" />
       <InputBar

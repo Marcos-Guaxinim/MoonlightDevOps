@@ -16,7 +16,9 @@ export function ProtectedRoute({ children, adminOnly = false }: ProtectedRoutePr
         return <Navigate to="/login" replace />;
     }
 
-    if(adminOnly && user?.type !== 'admin'){
+    const isAdmin = user?.roles.includes("admin") ?? false;
+
+    if(adminOnly && !isAdmin){
         return <Navigate to="/" replace />; // cliente vai pra home se nao for admin.
     }
 

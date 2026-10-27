@@ -1,5 +1,4 @@
 import { useState } from "react";
-import type { TableColumn } from "react-data-table-component";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency } from "../../utils/currencyFormatter/formatCurrency";
@@ -7,26 +6,15 @@ import { Button } from "../../components/common/Generic/Button/Button";
 import { PencilIcon, TrashIcon } from "@phosphor-icons/react";
 import { deleteGame } from "../../services/realServices/game.service";
 import type { GameResponseDTO } from "../../@types/game/game.dto";
+import { resolveImageUrl } from "../../utils/resolveImage/resolveImageUrl";
+import { createColumnHelper } from "@tanstack/react-table";
+import type { appTableFeatures } from "../../utils/tableFeatures";
+
+const columnHelper = createColumnHelper<typeof appTableFeatures, GameResponseDTO>();
 
 export function useGameTable(refetch: () => void){
     const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
     const navigate = useNavigate();
-
-    const GameColumns: TableColumn<GameResponseDTO>[] = [
-        { name: 'Titulo', selector: (row: GameResponseDTO) => row.title, sortable: true },
-        { name: 'Preço', selector: (row: GameResponseDTO) => formatCurrency(row.price) },
-        { name: 'Imagem', cell: (row: GameResponseDTO) => (<><img className="h-30" src={`${row.image}`}/></>)},
-        { name: 'Ativo', selector: (row: GameResponseDTO) => (row.active ? "Sim" : "Não") },
-        {
-            name: 'Ações',
-            cell: (row: GameResponseDTO, rowIndex: number) => (
-            <>
-                <Button id={`game-edit-btn-${rowIndex}`} variant="transparent" onClick={() => handleEdit(row)}>{<PencilIcon size={32}/>}</Button>
-                <Button id={`game-delete-btn-${rowIndex}`} variant="transparent" onClick={() => setConfirmDeleteId(row.id_game!)}>{<TrashIcon size={32}/>}</Button>
-            </>
-            ),
-        }
-    ]
 
     const handleEdit = (row: GameResponseDTO) => {
         navigate(`/admin/games/edit/${row.id_game}`, { state: {game: row} });
@@ -41,6 +29,36 @@ export function useGameTable(refetch: () => void){
             toast.error(message);
         }
     }
+
+    const GameColumns = columnHelper.columns([
+      columnHelper.accessor("title", { header: "Título" }),
+      columnHelper.accessor("price", {
+        header: "Preço",
+        cell: (info) => formatCurrency(info.getValue()),
+      }),
+      columnHelper.accessor("image", {
+        header: "Imagem",
+        cell: (info) => <img className="h-auto w-30" src={resolveImageUrl(`${info.getValue()}`)}/>
+      }),
+      columnHelper.accessor("active", {
+        header: "Ativo",
+        cell: (info) => (info.getValue() ? "Sim" : "Não"),
+      }),
+      columnHelper.display({
+        id: "actions",
+        header: "Ações",
+        cell: ({ row }) => (
+          <>
+            <Button variant="transparent" onClick={() => handleEdit(row.original)}>
+              <PencilIcon size={32} />
+            </Button>
+            <Button variant="transparent" onClick={() => setConfirmDeleteId(row.original.id_game!)}>
+                <TrashIcon size={32} />
+            </Button>
+          </>
+        )
+      })
+    ])
 
     return {GameColumns, confirmDeleteId, setConfirmDeleteId, handleDelete};
 }
