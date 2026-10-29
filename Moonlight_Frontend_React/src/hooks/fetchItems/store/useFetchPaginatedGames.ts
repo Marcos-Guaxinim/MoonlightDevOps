@@ -20,7 +20,7 @@ export function useFetchPaginatedGames(query: GamePaginatedQueryPayload){
 
     useEffect(() => {
         let isMounted = true;
-        
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
         setIsLoading(true)
 
@@ -28,14 +28,14 @@ export function useFetchPaginatedGames(query: GamePaginatedQueryPayload){
         .then(response => {
             if (isMounted) {
                 setGames(prev => internalPage === 1 ? response.data : [...prev, ...response.data]);
-                if(response.data.length < limit) setHasMore(false);
+                setHasMore(internalPage < response.totalPages);
             }
         }).catch(() =>
             toast.error("Não foi possivel carregar os jogos.")
         ).finally(() => {
             if(isMounted) setIsLoading(false);
         });
-        
+
         return () => { isMounted = false; };
 
     }, [limit, internalPage, category, launch_date_from, launch_date_to, price_max, price_min, random, title]);

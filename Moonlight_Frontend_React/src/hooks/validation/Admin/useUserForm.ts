@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { validateUser } from "../../../utils/Validation/Admin/ValidateUser";
 import { getUserFormErrors } from "../../../utils/Validation/formErrors/Admin/getFormErrorsAdmin";
@@ -7,15 +7,13 @@ import type { UserPayload } from "../../../@types/user/user.payload";
 
 type UserFormData = "create" | "edit";
 
-type UserType = "customer" | "admin";
-
 type InitialData = {
     name: string,
     email: string,
     cpf: string,
     password: string,
     confirmPassword: string,
-    type: UserType;
+    id_roles: number[]
 }
 
 const emptyFields: InitialData = {
@@ -24,11 +22,11 @@ const emptyFields: InitialData = {
     cpf: "",
     password: "",
     confirmPassword: "",
-    type: "customer",
+    id_roles: [] as number[]
 }
 
 /**
- * 
+ *
  * @param mode modo do formulario, se é create ou edit
  * @param initialData dados iniciais, se for update resgata os dados da row que a tabela recebe ou então começa com campos vazios mesmo.
  * @returns retorna muitos objetos para auxiliar o formulario sem encher de logica no componente.
@@ -36,6 +34,14 @@ const emptyFields: InitialData = {
 export function useUserForm(mode: UserFormData, initialData?: InitialData){
     const navigate = useNavigate();
     const [fields, setFields] = useState<InitialData>(initialData ?? emptyFields);
+    const hasHydratedRoles = useRef(false);
+
+    useEffect(() => {
+      if (!hasHydratedRoles.current && initialData && initialData.id_roles.length > 0) {
+        setFields(prev => ({ ...prev, id_roles: initialData.id_roles }));
+        hasHydratedRoles.current = true;
+      }
+    }, [initialData?.id_roles]);
 
     const [ui, setUi] = useState({
         showPassword: false, showConfirm: false,
@@ -44,22 +50,27 @@ export function useUserForm(mode: UserFormData, initialData?: InitialData){
     });
     const [touched, setTouched] = useState({
         name: false, email: false, cpf: false,
-        password: false, confirmPassword: false, type: false
+        password: false, confirmPassword: false,
+        id_roles: false
     });
 
-    const { isValid } = validateUser(fields); // mesma validação
-    const showErrors = getUserFormErrors(fields, touched, ui.submitted); // mesmos erros
+    const toggleRole = (id_role: number) => {
+        // Atualizo o estado mantendo a imutabilidade
+        setFields(prev => ({
+            ...prev, // recupero todos os campos anteriores
 
-    const selectOptions = [
-        {
-            value: "customer" as UserType,
-            label: "Cliente"
-        },
-        {
-            value: "admin" as UserType,
-            label: "Admin"
-        }
-    ]
+            // Verifico se o ID da role já existe no array de roles
+            id_roles: prev.id_roles.includes(id_role)
+                ? // CASO JÁ EXISTA: Filtra o array e remove o ID que desobedesce a condição de comparação, ou seja o id que ja existe. (Desmarca a role)
+                prev.id_roles.filter(id => id !== id_role)
+                : // CASO NÃO EXISTA: Cria um novo array com os IDs antigos + o novo (Marcar)
+                [...prev.id_roles, id_role]
+        }));
+    };
+
+    const { isValid } = validateUser(fields);
+    const showErrors = getUserFormErrors(fields, touched, ui.submitted);
+
     const setField = (field: keyof typeof fields) => (value: string) => {
         setFields(prev => ({ ...prev, [field]: value }));
         setUi(prev => ({ ...prev, apiError: null }));
@@ -79,17 +90,17 @@ export function useUserForm(mode: UserFormData, initialData?: InitialData){
         email: fields.email,
         cpf: fields.cpf,
         password: fields.password,
-        type: fields.type
+        id_roles: fields.id_roles
     });
 
-    const handleSubmit = async (id_game?: number) => {
+    const handleSubmit = async (id_user?: number) => {
         setUi(prev => ({ ...prev, submitted: true, apiError: null }));
         if (!isValid) return;
 
-        try {
+      try {
             setUi(prev => ({ ...prev, loading: true }));
-            if(mode === "edit" && id_game){
-                await updateUser(id_game, buildPayload());
+            if(mode === "edit" && id_user){
+                await updateUser(id_user, buildPayload());
             } else{
                 await createUser(buildPayload());
             }
@@ -104,8 +115,8 @@ export function useUserForm(mode: UserFormData, initialData?: InitialData){
     };
 
     return {
-        fields, selectOptions, ui, showErrors,
-        setField, handleBlur,
+        fields, ui, showErrors,
+        setField, handleBlur, toggleRole,
         toggleShowPassword, toggleShowConfirm, handleSubmit
     };
 }

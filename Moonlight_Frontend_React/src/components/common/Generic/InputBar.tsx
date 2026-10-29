@@ -7,8 +7,8 @@ import type { ComponentPropsWithoutRef } from "react";
     };
 
     const variantClass = {
-        primary: "bg-night-soft text-black border-3 rounded-md border-night",
-        secondary: "bg-night text-white border-3 rounded-md border-white",
+        primary: "bg-base-soft text-black border-3 rounded-md border-base",
+        secondary: "bg-base text-white border-3 rounded-md border-white",
         terciary: "bg-white/5 border rounded-md transition-all duration-300 focus-within:border-white/40 focus-within:bg-white/8"
     };
 

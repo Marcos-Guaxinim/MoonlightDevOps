@@ -8,7 +8,9 @@ import { isCategoryNameValid } from "../../../../utils/Validation/dataRules/Cate
 import { isDescriptionValid } from "../../../../utils/Validation/dataRules/Category/categoryDescription";
 import { TextAreaForm } from "../../../../components/common/Forms/TextAreaFrom";
 import type { CategoryResponseDTO } from "../../../../@types/category/category.dto";
-
+import { useImageUpload } from "../../../../hooks/upload/useImageUpload";
+import { Spinner } from "../../../../components/common/Generic/Spinner";
+import { resolveImageUrl } from "../../../../utils/resolveImage/resolveImageUrl";
 
 type CategoryFormProps = {
     mode: "create" | "edit";
@@ -22,6 +24,8 @@ export function CategoryForm({mode, category} : CategoryFormProps){
         description: category.description,
         image: category.image ?? ""
     } : undefined);
+
+    const { handleFileUpload, uploading, previewUrl } = useImageUpload('category', setField("image"));
 
     // Tela de sucesso
     if (ui.submitted && !ui.apiError && ui.success) {
@@ -60,14 +64,29 @@ export function CategoryForm({mode, category} : CategoryFormProps){
                     <FieldVerify showError={showErrors.showErrorDescription} passed={isDescriptionValid(fields.description)} errorMessage="A descrição tem que ter 1 ou até no maximo 255 caracteres"/>
                 </div>
             </div>
-            <div className="max-lg:flex max-lg:flex-col lg:grid lg:grid-cols-1">
+            <div className="items-center max-lg:flex max-lg:flex-col lg:grid lg:grid-cols-2">
+              <div>
                 <InputFieldForm
-                    id="category-image" label="URL da Imagem do Card" type="text"
-                    value={fields.image} onChangeState={setField("image")}
-                    placeholder="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/292030/header.jpg"
+                    id="category-image" label="Imagem do Card" type="file"
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    disabled={uploading}
+                    placeholder="Insira arquivos JPEG, PNG, GIF, AVIF e WebP"
                     maxLength={255}
                     icon={<ImageIcon size={18} />}
                 />
+              </div>
+              {uploading && <div><Spinner /></div>}
+              {(previewUrl || fields.image) && (
+                <div className="justify-self-center flex flex-col items-center">
+                  <img
+                      src={previewUrl ?? `${resolveImageUrl(fields.image)}`}
+                      alt="Preview da categoria"
+                      className="w-fit h-32 object-cover rounded mt-2"
+                  />
+                  <p>Preview da Imagem da Categoria</p>
+                </div>
+              )}
             </div>
 
             {ui.apiError && (

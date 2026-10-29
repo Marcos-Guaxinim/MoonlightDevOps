@@ -23,7 +23,7 @@ export function CustomerFooter(){
     const {categories, isLoading} = useFetchPaginatedCategories(query);
 
     return(
-        <footer className="bg-night w-full flex flex-col justify-evenly items-center p-4 pt-12 gap-8">
+        <footer className="bg-base w-full flex flex-col justify-evenly items-center p-4 pt-12 gap-8">
             <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-6 px-4 lg:px-20">
                 <Button className="w-1/2 flex justify-center" as="link" href="/" variant="transparent">
                     <img src={moonlightMaior} className="h-auto w-auto" alt="Moonlight Logo" />

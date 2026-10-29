@@ -34,25 +34,35 @@ body{
 }
 
 @theme {
-  --color-night: #000000;
-  --color-night-soft: #111827;
-  --color-blue-cta: #2b7fff;
-
-  --color-night-hover: color-mix(in oklab, var(--color-white) 90%, transparent);
-  --color-blue-cta-hover: #155dfc;
-
-  --color-text-night-hover: #000000;
-
+  --color-base: #000000;
+  --color-base-soft: #111827;
+  --color-base-hover: color-mix(in oklab, var(--color-white) 90%, transparent);
   --color-surface-card: #1F2330;
-  --color-icon-branco: #FFFFFF;
-  --color-icon-branco-soft: #F2F4F8;
+  --color-icon-base: #FFFFFF;
+  --color-icon-base-soft: #F2F4F8;
+  --color-blue-cta: #2b7fff;
+  --color-blue-cta-hover: #155dfc;
+  --color-text-base-hover: #000000;
+
 
   --animate-glow-cta: glowCTA 2s ease-in-out infinite;
   --animate-glow: glow 2s ease-in-out infinite;
   --animate-pulse-soft: pulseSoft 2s ease-in-out infinite;
   --animate-fade-in: fadeIn 0.6s ease forwards;
 
-  --translateUp: .itemTranslateUp; 
+  --translateUp: .itemTranslateUp;
+}
+
+:root[data-theme="light"] {
+  --color-base: #F4F4EF;
+  --color-base-soft: #FAFAF7;
+  --color-base-hover: color-mix(in oklab, var(--color-black) 90%, transparent);
+  --color-surface-card: #FFFFFF;
+  --color-icon-base: #000000;
+  --color-icon-base-soft: #0A0A12;
+  --color-blue-cta: #2B7FFF;
+  --color-blue-cta-hover: #155dfc;
+  --color-text-base-hover: #F4F4EF;
 }
 
 @keyframes glowCTA {
@@ -100,6 +110,29 @@ body{
     left: 0;
   }
 
+  @media (min-width: 1024px) {
+      .lg-fx-underline {
+          position: relative;
+          overflow: hidden;
+      }
+
+      .lg-fx-underline::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          width: 0%;
+          height: 2px;
+          background: white;
+          transition: all 0.3s ease;
+      }
+
+      .lg-fx-underline:hover::after {
+          width: 100%;
+          left: 0;
+      }
+  }
+
   .fx-underline-to-left {
     position: relative;
   }
@@ -111,11 +144,11 @@ body{
     left: 0;
     width: 95%;
     height: 1px;
-    background: linear-gradient(to right, var(--color-night), var(--color-blue-cta), var(--color-blue-cta-hover));
+    background: linear-gradient(to right, var(--color-base), var(--color-blue-cta), var(--color-blue-cta-hover));
     animation: pulseSoft 1s infinite ease-in-out;
   }
 
   .gradient-overlay {
     background: linear-gradient(to top, hsl(var(--background)) 0%, transparent 60%);
-  }  
+  }
 }

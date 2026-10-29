@@ -29,7 +29,7 @@ export function SearchInputHeader({
 
   return (
     <div
-      className={`justify-self-center max-w-250 border-2 border-white rounded-md focus-within:border-blue-400 bg-night flex items-center w-full overflow-hidden transition-all duration-200 active:scale-[0.99]`}
+      className={`justify-self-center max-w-250 border-2 border-white rounded-md focus-within:border-blue-400 bg-base flex items-center w-full overflow-hidden transition-all duration-200 active:scale-[0.99]`}
     >
       <div className="w-12" />
       <InputBar

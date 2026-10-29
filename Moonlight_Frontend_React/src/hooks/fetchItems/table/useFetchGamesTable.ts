@@ -20,15 +20,27 @@ export function useFetchGamesTable(query: GamePaginatedQueryPayload){
 
     useEffect(() => {
         let isMounted = true;
-        
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
         setIsLoading(true)
-        fetchGamesPaginatedAdmin({active, limit, page: internalPage, category, launch_date_from, launch_date_to, price_max, price_min, random, title})
-        .then(({ data, total }) => {
-            if (isMounted) {
-                setGames(data);
-                setTotalRows(total);
+
+        const queryPayload: GamePaginatedQueryPayload = {
+            ...query,
+            page: internalPage,
+        };
+
+        fetchGamesPaginatedAdmin(queryPayload)
+        .then((response) => {
+          if (isMounted) {
+
+            if (internalPage > response.totalPages) {
+              setInternalPage(internalPage - 1);
+              return;
             }
+
+            setGames(response.data);
+            setTotalRows(response.total);
+          }
         }).catch(() =>
             toast.error("Não foi possivel carregar os Jogos.")
         ).finally(() => {
@@ -39,5 +51,5 @@ export function useFetchGamesTable(query: GamePaginatedQueryPayload){
 
     const refetch = () => setVersion(v => v + 1);
 
-    return { games, isLoading, totalRows, onPageChange: setInternalPage, refetch }
+    return { games, isLoading, totalRows, internalPage, setInternalPage, refetch }
 }

@@ -9,11 +9,11 @@ function CartPage() {
   const { isAuthenticated } = useAuth();
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-night-soft via-night-soft to-night flex flex-col items-center justify-center">
+    <main className="min-h-screen bg-gradient-to-b from-base-soft via-base-soft to-base flex flex-col items-center justify-center">
         <div className="p-10 relative w-full flex flex-col gap-10 max-lg:max-w-md lg:max-w-xl animate-fade-in">
           <CartItemsQuantity quantity={items.length}/>
           {items.length > 0 &&
-            <CartData 
+            <CartData
               isAuthenticated={isAuthenticated}
               items={items}
               onRemove={removeItemFromCart}

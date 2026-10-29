@@ -37,7 +37,7 @@ describe('Game Validation Logic', () => {
         title: 'Elden Ring',
         price: '249.90',
         launch_date: '2022-02-25',
-        active: false // Seguindo sua lógica atual de !data.active
+        active: "false"
       };
 
       const result = validateGame(validGame);

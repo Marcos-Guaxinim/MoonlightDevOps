@@ -1,24 +1,19 @@
-
 import type { PaginatedResponse } from "../../@types/common/pagination";
 import type { GameResponseDTO } from "../../@types/game/game.dto";
 import type { GamePaginatedQueryPayload, GamePayload } from "../../@types/game/game.payload";
 import { sanitizeData } from "../../utils/sanitizer/sanitizer";
 import { api } from "../api";
-import { fetchGameByIdMock, fetchGamesPaginatedMock } from "../fakeServices/game.fakeservice";
+import { fetchGameByIdMock } from "../fakeServices/game.fakeservice";
 
 
 export async function fetchGamesPaginated(query: GamePaginatedQueryPayload): Promise<PaginatedResponse<GameResponseDTO>> {
-    if (import.meta.env.VITE_USE_MOCK === "true") {
-        return fetchGamesPaginatedMock(query.page, query.limit);
-    }
+
     const response = await api.get(`/api/games/pag`, { params: query });
     return response.data;
 }
 
 export async function fetchGamesPaginatedAdmin(query: GamePaginatedQueryPayload): Promise<PaginatedResponse<GameResponseDTO>> {
-    if (import.meta.env.VITE_USE_MOCK === "true") {
-        return fetchGamesPaginatedMock(query.page, query.limit);
-    }
+
     const response = await api.get(`/api/games/pagadmin`, { params: query });
     return response.data;
 }

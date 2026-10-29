@@ -33,7 +33,7 @@ export function SearchInputBar({
   return (
     <div className={`${classNameDiv} flex items-center justify-center`}>
         <div
-          className="hidden sm:flex border-2 border-white rounded-md focus-within:border-blue-400 bg-night items-center w-full overflow-hidden transition-all duration-200 active:scale-[0.99]"
+          className="hidden sm:flex border-2 border-white rounded-md focus-within:border-blue-400 bg-base items-center w-full overflow-hidden transition-all duration-200 active:scale-[0.99]"
         >
           <InputBar
             className="text-center flex-1 bg-transparent outline-none border-none text-white placeholder:text-gray-400 pl-4"
@@ -63,7 +63,7 @@ export function SearchInputBar({
         </div>
 
         <div className="sm:hidden flex flex-col items-center gap-2 w-full">
-          <div className="border-2 border-white rounded-md focus-within:border-blue-400 bg-night items-center w-full overflow-hidden transition-all duration-200 active:scale-[0.99]">
+          <div className="border-2 border-white rounded-md focus-within:border-blue-400 bg-base items-center w-full overflow-hidden transition-all duration-200 active:scale-[0.99]">
             <InputBar
               className="text-left flex-1 bg-transparent outline-none border-none text-white placeholder:text-gray-400"
               name={name}
