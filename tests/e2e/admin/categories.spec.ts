@@ -89,16 +89,13 @@ test.describe('CRUD de Categorias', () => {
     await loginAsAdmin(page);
     await page.goto('/admin/categories');
 
-    const primeiraLinha = page.locator('#row-0').first();
-    const nomeAntes = await primeiraLinha.locator('.rdt_TableCell').first().innerText();
+    const primeiraLinha = page.locator('tbody tr').first();
+    const nomeAntes = (await primeiraLinha.locator('td').first().innerText()).trim();
 
-    // Clica no botão de deletar (segundo botão da linha)
     await page.click('button#cat-delete-btn-0');
-
-    // Cancela o modal
     await page.click('button#modal-cancel-btn');
 
-    await expect(page.locator(`text=${nomeAntes}`)).toBeVisible();
+    await expect(page.getByText(nomeAntes, { exact: true })).toBeVisible();
   });
 
   test('excluir: sucesso ao excluir categoria', async ({ page }) => {
@@ -112,6 +109,6 @@ test.describe('CRUD de Categorias', () => {
 
     await page.click('button#modal-confirm-btn');
 
-    await expect(page.locator(`text=${nomeCategoriaEditada}`)).not.toBeVisible();
+    await expect(page.getByText(nomeCategoriaEditada, { exact: true })).not.toBeVisible();
   });
 });

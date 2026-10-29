@@ -23,8 +23,8 @@ test.describe('CRUD de Games', () => {
     await expect(page.locator('tbody tr').first()).toBeVisible();
 
     // ações da primeira linha ainda têm id estável (bom manter)
-    await expect(page.locator('#cat-edit-btn-0')).toBeVisible();
-    await expect(page.locator('#cat-delete-btn-0')).toBeVisible();
+    await expect(page.locator('#game-edit-btn-0')).toBeVisible();
+    await expect(page.locator('#game-delete-btn-0')).toBeVisible();
   });
 
   test('cadastrar: sucesso ao criar novo game', async ({ page }) => {
@@ -91,16 +91,13 @@ test.describe('CRUD de Games', () => {
     await loginAsAdmin(page);
     await page.goto('/admin/games');
 
-    const primeiraLinha = page.locator('#row-0').first();
-    const nomeAntes = await primeiraLinha.locator('.rdt_TableCell').first().innerText();
+    const primeiraLinha = page.locator('tbody tr').first();
+    const nomeAntes = (await primeiraLinha.locator('td').first().innerText()).trim();
 
-    // Clica no botão de deletar (segundo botão da linha)
     await page.click('button#game-delete-btn-0');
-
-    // Cancela o modal
     await page.click('button#modal-cancel-btn');
 
-    await expect(page.locator(`text=${nomeAntes}`)).toBeVisible();
+    await expect(page.getByText(nomeAntes, { exact: true })).toBeVisible();
   });
 
   test('excluir: sucesso ao excluir game', async ({ page }) => {
@@ -114,6 +111,6 @@ test.describe('CRUD de Games', () => {
 
     await page.click('button#modal-confirm-btn');
 
-    await expect(page.locator(`text=${nomeGameEditado}`)).not.toBeVisible();
+    await expect(page.getByText(nomeGameEditado, { exact: true })).not.toBeVisible();
   });
 });
