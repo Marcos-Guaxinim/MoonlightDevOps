@@ -91,26 +91,37 @@ test.describe('CRUD de Games', () => {
     await loginAsAdmin(page);
     await page.goto('/admin/games');
 
-    const primeiraLinha = page.locator('tbody tr').first();
-    const nomeAntes = (await primeiraLinha.locator('td').first().innerText()).trim();
+    await page.fill('input#game-name-search', nomeGameEditado);
+    await page.click('button#game-name-search-desktop-btn');
 
-    await page.click('button#game-delete-btn-0');
+    const row = page.locator('tbody tr').filter({ hasText: nomeGameEditado });
+    await expect(row).toBeVisible();
+
+    await row.locator('button#game-delete-btn-0').click();
     await page.click('button#modal-cancel-btn');
 
-    await expect(page.getByText(nomeAntes, { exact: true })).toBeVisible();
+    await expect(row).toBeVisible();
   });
 
   test('excluir: sucesso ao excluir game', async ({ page }) => {
     await loginAsAdmin(page);
     await page.goto('/admin/games');
 
-    await page.fill('input#game-title-search', nomeGameEditado);
-    await page.click('button#game-title-search-desktop-btn');
+    await page.fill('input#game-name-search', nomeGameEditado);
+    await page.click('button#game-name-search-desktop-btn');
 
-    await page.click('button#game-delete-btn-0');
+    const row = page.locator('tbody tr').filter({ hasText: nomeGameEditado });
+    await expect(row).toBeVisible();
+
+    // Espera o botão estável depois do re-render do filtro
+    const deleteBtn = row.locator('button#game-delete-btn-0');
+    await expect(deleteBtn).toBeVisible();
+    await deleteBtn.click();
 
     await page.click('button#modal-confirm-btn');
 
-    await expect(page.getByText(nomeGameEditado, { exact: true })).not.toBeVisible();
+    await expect(
+      page.locator('tbody tr').filter({ hasText: nomeGameEditado })
+    ).toHaveCount(0);
   });
 });
