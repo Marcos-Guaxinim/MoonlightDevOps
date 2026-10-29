@@ -32,7 +32,7 @@ type TableProps<TRowData extends Record<string, any>> = {
 }
 
 export function Table<TRowData extends Record<string, any>>(props: TableProps<TRowData>) {
-  const { columns, data, isLoading, totalRows, currentPage = 1, onPageChange, pageSize = 5, ...rest } = props;
+  const { columns, data, isLoading, totalRows, currentPage = 1, onPageChange, pageSize = 5 } = props;
 
 
   const [expanded, setExpanded] = useState({});

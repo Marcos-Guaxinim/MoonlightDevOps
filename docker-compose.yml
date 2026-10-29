@@ -34,6 +34,7 @@ services:
     build:
       context: ./Moonlight_Backend
       dockerfile: Dockerfile
+      target: migrate
     container_name: migrate_service
     restart: "no"
     # Executa as migrations e, se RUN_SEED=true, também roda o seed

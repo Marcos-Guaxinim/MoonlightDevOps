@@ -1,5 +1,4 @@
 import { useState } from "react";
-import type { TableColumn } from "react-data-table-component";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/common/Generic/Button/Button";
