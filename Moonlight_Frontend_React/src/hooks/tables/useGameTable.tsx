@@ -47,12 +47,12 @@ export function useGameTable(refetch: () => void){
       columnHelper.display({
         id: "actions",
         header: "Ações",
-        cell: ({ row }) => (
+        cell: (info) => (
           <>
-            <Button variant="transparent" onClick={() => handleEdit(row.original)}>
+            <Button id={`game-edit-btn-${info.row.index}`} variant="transparent" onClick={() => handleEdit(info.row.original)}>
               <PencilIcon size={32} />
             </Button>
-            <Button variant="transparent" onClick={() => setConfirmDeleteId(row.original.id_game!)}>
+            <Button id={`game-delete-btn-${info.row.index}`} variant="transparent" onClick={() => setConfirmDeleteId(info.row.original.id_game!)}>
                 <TrashIcon size={32} />
             </Button>
           </>

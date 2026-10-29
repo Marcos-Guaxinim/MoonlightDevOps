@@ -11,7 +11,20 @@ test.describe('CRUD de Games', () => {
     await loginAsAdmin(page);
     await page.goto('/admin/games');
 
-    await expect(page.locator('.rdt_Table')).toBeVisible();
+    const table = page.getByRole('table');
+    await expect(table).toBeVisible();
+
+    // colunas esperadas
+    await expect(page.getByRole('columnheader', { name: 'Título' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Preço' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Ações' })).toBeVisible();
+
+    // pelo menos uma linha de dados
+    await expect(page.locator('tbody tr').first()).toBeVisible();
+
+    // ações da primeira linha ainda têm id estável (bom manter)
+    await expect(page.locator('#cat-edit-btn-0')).toBeVisible();
+    await expect(page.locator('#cat-delete-btn-0')).toBeVisible();
   });
 
   test('cadastrar: sucesso ao criar novo game', async ({ page }) => {
