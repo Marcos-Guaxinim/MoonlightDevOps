@@ -89,13 +89,16 @@ test.describe('CRUD de Categorias', () => {
     await loginAsAdmin(page);
     await page.goto('/admin/categories');
 
-    const primeiraLinha = page.locator('tbody tr').first();
-    const nomeAntes = (await primeiraLinha.locator('td').first().innerText()).trim();
+    await page.fill('input#category-name-search', nomeCategoriaEditada);
+    await page.click('button#category-name-search-desktop-btn');
 
-    await page.click('button#cat-delete-btn-0');
+    const row = page.locator('tbody tr').filter({ hasText: nomeCategoriaEditada });
+    await expect(row).toBeVisible();
+
+    await row.locator('button#cat-delete-btn-0').click();
     await page.click('button#modal-cancel-btn');
 
-    await expect(page.getByText(nomeAntes, { exact: true })).toBeVisible();
+    await expect(row).toBeVisible();
   });
 
   test('excluir: sucesso ao excluir categoria', async ({ page }) => {
@@ -105,10 +108,18 @@ test.describe('CRUD de Categorias', () => {
     await page.fill('input#category-name-search', nomeCategoriaEditada);
     await page.click('button#category-name-search-desktop-btn');
 
-    await page.click('button#cat-delete-btn-0');
+    const row = page.locator('tbody tr').filter({ hasText: nomeCategoriaEditada });
+    await expect(row).toBeVisible();
+
+    // Espera o botão estável depois do re-render do filtro
+    const deleteBtn = row.locator('button#cat-delete-btn-0');
+    await expect(deleteBtn).toBeVisible();
+    await deleteBtn.click();
 
     await page.click('button#modal-confirm-btn');
 
-    await expect(page.getByText(nomeCategoriaEditada, { exact: true })).not.toBeVisible();
+    await expect(
+      page.locator('tbody tr').filter({ hasText: nomeCategoriaEditada })
+    ).toHaveCount(0);
   });
 });
