@@ -91,8 +91,8 @@ test.describe('CRUD de Games', () => {
     await loginAsAdmin(page);
     await page.goto('/admin/games');
 
-    await page.fill('input#game-name-search', nomeGameEditado);
-    await page.click('button#game-name-search-desktop-btn');
+    await page.fill('input#game-title-search', nomeGameEditado);
+    await page.click('button#game-title-search-desktop-btn');
 
     const row = page.locator('tbody tr').filter({ hasText: nomeGameEditado });
     await expect(row).toBeVisible();
@@ -107,8 +107,8 @@ test.describe('CRUD de Games', () => {
     await loginAsAdmin(page);
     await page.goto('/admin/games');
 
-    await page.fill('input#game-name-search', nomeGameEditado);
-    await page.click('button#game-name-search-desktop-btn');
+    await page.fill('input#game-title-search', nomeGameEditado);
+    await page.click('button#game-title-search-desktop-btn');
 
     const row = page.locator('tbody tr').filter({ hasText: nomeGameEditado });
     await expect(row).toBeVisible();
