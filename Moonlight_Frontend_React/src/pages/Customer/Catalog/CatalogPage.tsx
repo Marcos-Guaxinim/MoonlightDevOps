@@ -2,7 +2,7 @@ import { CatalogGamesList } from "./sections/CatalogGamesList";
 import { useState } from "react";
 import { SearchInputBar } from "../../../components/common/Generic/SearchInputBar";
 import { CatalogSideBar } from "./sections/CatalogSideBar";
-import { useCatalogFilters } from "../../../hooks/filters/useCatalogFilters";
+import { useCatalogFilters } from "../../../hooks/filters/customer/useCatalogFilters";
 import { SlidersIcon } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "../../../components/common/Generic/Button/Button";
 import { useUpdateUrlParam } from "../../../hooks/updateUrlParam/useUpdateUrlParam";
@@ -14,7 +14,7 @@ export function CatalogPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-night-soft via-night-soft to-night flex justify-center">
+    <main className="min-h-screen bg-gradient-to-b from-base-soft via-base-soft to-base flex justify-center">
       {drawerOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-20 transition-opacity"

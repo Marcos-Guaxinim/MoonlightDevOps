@@ -20,7 +20,7 @@ const emptyFields: InitialData = {
 }
 
 /**
- * 
+ *
  * @param mode modo do formulario, se é create ou edit
  * @param initialData dados iniciais, se for update resgata os dados da row que a tabela recebe ou então começa com campos vazios mesmo.
  * @returns retorna muitos objetos para auxiliar o formulario sem encher de logica no componente.

@@ -11,24 +11,36 @@ export function useFetchUsersTable(query: UserPaginatedQueryPayload){
     const [internalPage, setInternalPage] = useState(1);
     const [version, setVersion] = useState(0);
 
-    const {limit, cpf, email, name, type} = query
+    const {limit, cpf, email, name, role} = query
 
     useEffect(() => {
         setUsers([]);
         setInternalPage(1);
-    }, [limit, cpf, email, name, type]);
+    }, [limit, cpf, email, name, role]);
 
     useEffect(() => {
         let isMounted = true;
-        
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
         setIsLoading(true)
-        fetchUsersPaginated(query)
-        .then(({ data, total }) => {
-            if (isMounted) {
-                setUsers(data);
-                setTotalRows(total);
+
+        const queryPayload: UserPaginatedQueryPayload = {
+            ...query,
+            page: internalPage,
+        };
+
+        fetchUsersPaginated(queryPayload)
+        .then((response) => {
+          if (isMounted) {
+
+            if (internalPage > response.totalPages) {
+              setInternalPage(internalPage - 1);
+              return;
             }
+
+            setUsers(response.data);
+            setTotalRows(response.total);
+          }
         }).catch(() =>
             toast.error("Não foi possivel carregar os usuarios.")
         ).finally(() => {
@@ -36,9 +48,9 @@ export function useFetchUsersTable(query: UserPaginatedQueryPayload){
         });
         return () => { isMounted = false; };
 
-    }, [internalPage, limit, cpf, email, name, type, version]);
+    }, [internalPage, limit, cpf, email, name, role, version]);
 
     const refetch = () => setVersion(v => v + 1);
 
-    return { users, isLoading, totalRows, onPageChange: setInternalPage, refetch }
+    return { users, isLoading, totalRows, internalPage, setInternalPage, refetch }
 }

@@ -45,7 +45,7 @@ export async function createUserMock(data: UserPayload): Promise<ApiResponse>{
         throw new Error("Email inválido ou obrigatório!");
     }
 
-    const mockedDatabase = ["juan@yahoo.com"]; 
+    const mockedDatabase = ["juan@yahoo.com"];
     const userExists = mockedDatabase.includes(data.email.toLowerCase());
 
     if (userExists) {
@@ -60,10 +60,6 @@ export async function createUserMock(data: UserPayload): Promise<ApiResponse>{
         throw new Error('Senha inválida ou obrigatória!');
     }
 
-    if(!data.type){
-        throw new Error('Tipo de usuário inválido ou obrigatório!');
-    }
-    
     return { message: "Usuário cadastrado com sucesso." };
 }
 
@@ -83,5 +79,5 @@ export async function updateMeMock(data: UpdateMePayload): Promise<UpdateMeRespo
         throw new Error('Senha inválida ou obrigatória!');
     }
 
-    return { message: "Usuário editado com sucesso.",  user: { id_user: 4, name: data.name, email: "update@gmail.com",  cpf: data.cpf, type: "admin" } };
+  return { message: "Usuário editado com sucesso.", user: { id_user: 4, name: data.name, email: "update@gmail.com", cpf: data.cpf, roles: ["customer"] } };
 }

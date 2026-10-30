@@ -1,1 +1,1 @@
-### Projeto atualmente na versão 1.1.2
+### Projeto atualmente na versão 1.2.0

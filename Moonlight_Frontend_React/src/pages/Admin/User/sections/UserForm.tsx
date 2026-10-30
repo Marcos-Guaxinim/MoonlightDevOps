@@ -1,30 +1,44 @@
-import { AddressBookIcon, ArrowRightIcon, CheckIcon, EnvelopeIcon, EyeIcon, EyeSlashIcon, IdentificationCardIcon, LockKeyIcon, UserIcon } from "@phosphor-icons/react";
+import { AddressBookIcon, ArrowRightIcon, CheckIcon, EnvelopeIcon, EyeIcon, EyeSlashIcon, LockKeyIcon, UserIcon } from "@phosphor-icons/react";
 import { Button } from "../../../../components/common/Generic/Button/Button";
 import { LoadingDots } from "../../../../components/common/Forms/LoadingDots";
 import { InputFieldForm } from "../../../../components/common/Forms/InputFieldForm";
 import { PasswordStrength } from "../../../../components/common/Forms/VerifyComponents/PasswordStrength";
-import { SelectForm } from "../../../../components/common/Forms/SelectForm";
 import { FieldVerify } from "../../../../components/common/Forms/VerifyComponents/FieldVerify";
 import { isNameValid } from "../../../../utils/Validation/dataRules/User/userName";
-import { isUserTypeValid } from "../../../../utils/Validation/dataRules/User/userType";
 import { formatCPF, isCPFValid } from "../../../../utils/Validation/dataRules/User/userCpf";
 import { isEmailValid } from "../../../../utils/Validation/dataRules/User/userEmail";
 import { useUserForm } from "../../../../hooks/validation/Admin/useUserForm";
 import type { UserResponseDTO } from "../../../../@types/user/user.dto";
+import { useMemo } from "react";
+import { useFetchRoles } from "../../../../hooks/fetchItems/admin/useFetchRoles";
+import { hasSelectedRole } from "../../../../utils/Validation/dataRules/User/userRole";
 
 type UserFormProps = {
     mode: "create" | "edit";
     user?: UserResponseDTO;
 }
 
-export function UserForm({mode, user} : UserFormProps){
-    const {fields, selectOptions, setField, showErrors, toggleShowConfirm, toggleShowPassword, ui, handleBlur, handleSubmit } = useUserForm(mode, user ? {
+export function UserForm({ mode, user }: UserFormProps) {
+
+  const { roles } = useFetchRoles();
+
+  const RoleIds = useMemo(() => {
+    return user?.roles!
+      .map(name => roles.find(role => role.name === name)?.id_role)
+      .filter((id_role): id_role is number => id_role !== undefined) ?? [];
+      // "Pega o array de nomes das categorias do jogo e compara esses nomes com os do banco de categorias, se for igual...
+      // → Pega o ID dessa categoria
+      // → Limpa o lixo (undefined ou null)
+      // → Se der ruim, me dá um array vazio."
+  }, [user, roles]);
+
+    const {fields, setField, showErrors, toggleRole, toggleShowConfirm, toggleShowPassword, ui, handleBlur, handleSubmit } = useUserForm(mode, user ? {
         name: user.name ?? "",
         email: user.email ?? "",
         cpf: user.cpf ?? "",
         password: "",
         confirmPassword: "",
-        type: (user.type ?? "customer") as "admin" | "customer"
+        id_roles: RoleIds
     } : undefined);
 
     // Tela de sucesso
@@ -79,7 +93,7 @@ export function UserForm({mode, user} : UserFormProps){
                     <FieldVerify passed={isEmailValid(fields.email)} showError={showErrors.showErrorEmail} errorMessage="O email não é válido" />
                 </div>
             </div>
-            <div className="max-lg:flex max-lg:flex-col lg:grid lg:grid-cols-3 gap-4">
+            <div className="max-lg:flex max-lg:flex-col lg:grid lg:grid-cols-2 gap-4">
                 <div>
                     <InputFieldForm
                         id="user-password" label="Senha"
@@ -114,18 +128,24 @@ export function UserForm({mode, user} : UserFormProps){
                         errorMessage="As senhas não coincidem"
                     />
                 </div>
-                <div>
-                    <SelectForm icon={<IdentificationCardIcon size={20} weight="thin" />}
-                        id="user-type-select"
-                        label="Tipo de Usuario"
-                        variant="terciary"
-                        options={selectOptions}
-                        value={fields.type}
-                        onChangeState={setField("type")}
-                        onBlur={handleBlur("type")}
-                    />
-                    <FieldVerify passed={isUserTypeValid(fields.type)} showError={showErrors.showErrorUserType} errorMessage="Escolha um tipo válido"/>
+            </div>
+            <div className="flex flex-col gap-2">
+                <label htmlFor="role-categories-checkbox" className="text-white text-sm">Cargos</label>
+                <div className="flex flex-wrap gap-2">
+                    {roles.map(role => (
+                      <label id={`role-categories-label-${role.id_role}`} key={role.id_role} className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-md px-3 py-2 cursor-pointer">
+                          <input
+                            id={`role-categories-checkbox-${role.id_role}`}
+                            type="checkbox"
+                            onChange={() => toggleRole(role.id_role!)}
+                            checked={fields.id_roles.includes(role.id_role!) }
+                            className="w-4 h-4"
+                          />
+                          <span className="text-white text-sm">{role.name}</span>
+                      </label>
+                    ))}
                 </div>
+                <FieldVerify showError={showErrors.showErrorUserRoles} passed={hasSelectedRole(fields.id_roles)} errorMessage="O usuario precisa pelo menos de um cargo para ser válido"/>
             </div>
 
             {ui.apiError && (

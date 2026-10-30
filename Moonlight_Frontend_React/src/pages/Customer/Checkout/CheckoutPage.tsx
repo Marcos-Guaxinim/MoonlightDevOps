@@ -12,8 +12,8 @@ export function CheckoutPage() {
 
     if (isLoading) {
         return (
-            <div className="w-full h-screen bg-gradient-to-b from-night-soft via-night-soft to-night flex items-center justify-center">
-                <Spinner variant="primary" />
+            <div className="w-full h-screen bg-gradient-to-b from-base-soft via-base-soft to-base flex items-center justify-center">
+                <Spinner />
             </div>
         );
     }
@@ -23,14 +23,14 @@ export function CheckoutPage() {
     }
 
     return (
-        <main className="min-h-screen bg-gradient-to-b from-night-soft via-night-soft to-night flex flex-col items-center justify-center">
+        <main className="min-h-screen bg-gradient-to-b from-base-soft via-base-soft to-base flex flex-col items-center justify-center">
             {/* Equivalente ao <script data-preference-id> do PHP */}
             {preferenceId && (
                 <Card variant="primary" className="p-8 animate-fade-in">
                     <CardHeader><h1 className="text-center text-3xl font-bold text-white">Checkout</h1></CardHeader>
                     <CardContent>
-                        <Wallet 
-                            initialization={{ preferenceId }} 
+                        <Wallet
+                            initialization={{ preferenceId }}
                         />
                     </CardContent>
                 </Card>

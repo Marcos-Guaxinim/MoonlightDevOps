@@ -5,7 +5,7 @@ export type UserFormData = {
     cpf: string,
     password: string,
     confirmPassword: string
-    type: string
+    id_roles: number[]
 }
 
 export type UserTouched = {
@@ -13,8 +13,8 @@ export type UserTouched = {
     email: boolean,
     cpf: boolean,
     password: boolean,
-    confirmPassword: boolean
-    type: boolean
+    confirmPassword: boolean,
+    id_roles: boolean
 }
 
 export type GameFormData = {
@@ -24,7 +24,7 @@ export type GameFormData = {
     image: string,
     link: string,
     launch_date: string,
-    active: boolean,
+    active: string,
     categories: number[],
 }
 

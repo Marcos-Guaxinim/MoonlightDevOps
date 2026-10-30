@@ -1,7 +1,7 @@
 {
   "name": "moonlight_frontend",
   "private": true,
-  "version": "1.2.1",
+  "version": "1.3.3",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,6 +16,7 @@
   "dependencies": {
     "@mercadopago/sdk-react": "^1.0.7",
     "@phosphor-icons/react": "^2.1.10",
+    "@tanstack/react-table": "^9.2.4",
     "axios": "^1.13.6",
     "cpf-cnpj-validator": "^1.0.3",
     "mercadopago": "^2.12.0",

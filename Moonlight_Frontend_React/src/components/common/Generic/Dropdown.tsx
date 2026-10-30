@@ -13,7 +13,7 @@ type DropdownProps = {
 };
 
 const backgroundClass = {
-  on: "rounded-md border border-white/10 bg-night-soft z-20",
+  on: "rounded-md border border-white/10 bg-base-soft z-20",
   off: "",
 };
 

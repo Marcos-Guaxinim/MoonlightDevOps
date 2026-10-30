@@ -11,28 +11,19 @@ import { SearchInputBar } from "../../../../components/common/Generic/SearchInpu
 import { useUpdateUrlParam } from "../../../../hooks/updateUrlParam/useUpdateUrlParam";
 import { UserFilterSideBar } from "./UserFilterSideBar";
 
-type UserDataTableProps = {
-  email?: string;
-  cpf?: string;
-  type?: string;
-};
 
-export function UserDataTable(props: UserDataTableProps) {
+
+export function UserDataTable() {
   const { filters } = useUserFilters();
   const { updateURLParam } = useUpdateUrlParam();
   const [name, setName] = useState(filters.name ?? "");
 
   const query: UserPaginatedQueryPayload = useMemo(() => ({
-      page: 1,
-      limit: 5,
-      random: false,
-      name: filters.name,
-      cpf: props.cpf,
-      email: props.email,
-      type: props.type
-  }), [props, filters.name]);
+    limit: 5, random: false,
+    name: filters.name, cpf: filters.cpf, email: filters.email, role: filters.role,
+  }), [filters.name, filters.cpf, filters.email, filters.role]);
 
-  const {users, isLoading, refetch, onPageChange, totalRows} = useFetchUsersTable(query);
+  const { users, isLoading, refetch, internalPage, setInternalPage, totalRows } = useFetchUsersTable(query);
   const { UserColumns, confirmDeleteId, setConfirmDeleteId, handleDelete } = useUserTable(refetch);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -91,7 +82,9 @@ export function UserDataTable(props: UserDataTableProps) {
               </Button>
             </div>
           }
-          onPageChange={onPageChange}
+          pageSize={query.limit}
+          currentPage={internalPage}
+          onPageChange={setInternalPage}
           totalRows={totalRows}
         />
     </>

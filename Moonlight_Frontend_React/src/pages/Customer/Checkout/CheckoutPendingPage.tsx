@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "../../../components/common/Generi
 
 export function CheckoutPendingPage() {
     return (
-        <main className="min-h-screen bg-gradient-to-b from-night-soft via-night-soft to-night flex flex-col items-center justify-center">
+        <main className="min-h-screen bg-gradient-to-b from-base-soft via-base-soft to-base flex flex-col items-center justify-center">
             <Card variant="primary" className="p-8 animate-fade-in">
                 <CardHeader><h1 className="text-3xl font-bold text-white">⏳ Pagamento em Análise.</h1></CardHeader>
                 <CardContent>
@@ -18,10 +18,9 @@ export function CheckoutPendingPage() {
                             Continuar Comprando
                         </Button>
                     </div>
-                    
+
                 </CardContent>
             </Card>
         </main>
     );
 }
-

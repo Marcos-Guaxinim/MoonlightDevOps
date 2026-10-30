@@ -20,19 +20,17 @@ describe('useGameForm Integration', () => {
 
     expect(result.current.fields.title).toBe("");
     expect(result.current.fields.price).toBe("0.00");
-    expect(result.current.fields.active).toBe(true);
+    expect(result.current.fields.active).toBe("true");
   });
 
-  it('deve atualizar campos de texto e converter o campo active corretamente', () => {
+  it('deve atualizar campos de texto corretamente', () => {
     const { result } = renderHook(() => useGameForm('create'));
 
     act(() => {
       result.current.setField('title')('Elden Ring');
-      result.current.setField('active')('false'); // Simula o Select mandando string
     });
 
     expect(result.current.fields.title).toBe('Elden Ring');
-    expect(result.current.fields.active).toBe(false); // Validando a lógica do seu hook
   });
 
   it('deve gerenciar a seleção de categorias (toggleCategory)', () => {
@@ -59,7 +57,7 @@ describe('useGameForm Integration', () => {
       banner_image: "ds_banner.jpg",
       link: "http://ds.com",
       launch_date: "2011-09-22",
-      active: true,
+      active: "true",
       categories: [1],
     };
 

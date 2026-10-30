@@ -3,7 +3,7 @@ interface LoadingDotsProps {
 }
 
 export function LoadingDots({ color = "light" }: LoadingDotsProps) {
-    const dotColor = color === "dark" ? "bg-night" : "bg-gray-500";
+    const dotColor = color === "dark" ? "bg-base" : "bg-gray-500";
     return (
         <span className="flex gap-1">
             {[0, 1, 2].map((index) => (

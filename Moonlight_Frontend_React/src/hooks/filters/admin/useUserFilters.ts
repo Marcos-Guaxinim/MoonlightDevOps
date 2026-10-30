@@ -7,15 +7,14 @@ export function useUserFilters() {
     name: searchParams.get("name") ?? undefined,
     cpf: searchParams.get("cpf") ?? undefined,
     email: searchParams.get("email") ?? undefined,
-    type: searchParams.get("type") ?? undefined,
+    role: searchParams.get("role") ?? undefined,
     onChangeCpf: (cpf: string) => updateURLParam("cpf", cpf),
     onChangeEmail: (email: string) => updateURLParam("email", email),
-    onChangeType: (type: string) => updateURLParam("type", type),
-
-    onConfirmFilters: (cpf: string, email: string, type: string | undefined) =>
-      updateURLParams({ cpf: cpf, email: email, type: type }),
+    onChangeRole: (role: string) => updateURLParam("role", role),
+    onConfirmFilters: (cpf: string, email: string) =>
+      updateURLParams({ cpf: cpf, email: email, }),
     onCleanUpFilters: () =>
-      updateURLParams({ cpf: undefined, email: undefined, type: undefined }),
+      updateURLParams({ cpf: undefined, email: undefined }),
   };
 
   return {

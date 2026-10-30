@@ -3,7 +3,7 @@
  */
 
 export interface PaginatedQuery {
-  page: number,
+  page?: number,
   limit: number
 }
 

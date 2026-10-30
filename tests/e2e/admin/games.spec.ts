@@ -11,7 +11,20 @@ test.describe('CRUD de Games', () => {
     await loginAsAdmin(page);
     await page.goto('/admin/games');
 
-    await expect(page.locator('.rdt_Table')).toBeVisible();
+    const table = page.getByRole('table');
+    await expect(table).toBeVisible();
+
+    // colunas esperadas
+    await expect(page.getByRole('columnheader', { name: 'Título' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Preço' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Ações' })).toBeVisible();
+
+    // pelo menos uma linha de dados
+    await expect(page.locator('tbody tr').first()).toBeVisible();
+
+    // ações da primeira linha ainda têm id estável (bom manter)
+    await expect(page.locator('#game-edit-btn-0')).toBeVisible();
+    await expect(page.locator('#game-delete-btn-0')).toBeVisible();
   });
 
   test('cadastrar: sucesso ao criar novo game', async ({ page }) => {
@@ -78,16 +91,16 @@ test.describe('CRUD de Games', () => {
     await loginAsAdmin(page);
     await page.goto('/admin/games');
 
-    const primeiraLinha = page.locator('#row-0').first();
-    const nomeAntes = await primeiraLinha.locator('.rdt_TableCell').first().innerText();
+    await page.fill('input#game-title-search', nomeGameEditado);
+    await page.click('button#game-title-search-desktop-btn');
 
-    // Clica no botão de deletar (segundo botão da linha)
-    await page.click('button#game-delete-btn-0');
+    const row = page.locator('tbody tr').filter({ hasText: nomeGameEditado });
+    await expect(row).toBeVisible();
 
-    // Cancela o modal
+    await row.locator('button#game-delete-btn-0').click();
     await page.click('button#modal-cancel-btn');
 
-    await expect(page.locator(`text=${nomeAntes}`)).toBeVisible();
+    await expect(row).toBeVisible();
   });
 
   test('excluir: sucesso ao excluir game', async ({ page }) => {
@@ -97,10 +110,18 @@ test.describe('CRUD de Games', () => {
     await page.fill('input#game-title-search', nomeGameEditado);
     await page.click('button#game-title-search-desktop-btn');
 
-    await page.click('button#game-delete-btn-0');
+    const row = page.locator('tbody tr').filter({ hasText: nomeGameEditado });
+    await expect(row).toBeVisible();
+
+    // Espera o botão estável depois do re-render do filtro
+    const deleteBtn = row.locator('button#game-delete-btn-0');
+    await expect(deleteBtn).toBeVisible();
+    await deleteBtn.click();
 
     await page.click('button#modal-confirm-btn');
 
-    await expect(page.locator(`text=${nomeGameEditado}`)).not.toBeVisible();
+    await expect(
+      page.locator('tbody tr').filter({ hasText: nomeGameEditado })
+    ).toHaveCount(0);
   });
 });
