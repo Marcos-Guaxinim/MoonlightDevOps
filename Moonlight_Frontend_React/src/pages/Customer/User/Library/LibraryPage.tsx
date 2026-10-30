@@ -15,19 +15,19 @@ function LibraryPage() {
     const {games: libraryGames, isLoading} = useFetchLibrary();
     const {addItemToCart, removeItemFromCart, items} = useCart();
     const { isOwned } = useContext(LibraryContext);
-    
+
 
     if (isLoading) {
         return (
-            <div className="w-full min-h-screen bg-gradient-to-b from-night-soft via-night-soft to-night flex items-center justify-center">
-                <Spinner variant="primary" />
+            <div className="w-full min-h-screen bg-gradient-to-b from-base-soft via-base-soft to-base flex items-center justify-center">
+                <Spinner />
             </div>
         );
     }
 
     if (!libraryGames || libraryGames.length === 0) {
         return (
-            <div className="w-full min-h-screen bg-gradient-to-b from-night-soft via-night-soft to-night flex items-center justify-center">
+            <div className="w-full min-h-screen bg-gradient-to-b from-base-soft via-base-soft to-base flex items-center justify-center">
                 <Card variant="primary" className="p-8">
                     <CardHeader className="mb-8">
                         <h1 className="text-center text-3xl text-white">
@@ -37,16 +37,16 @@ function LibraryPage() {
                     <CardContent className="flex justify-center">
                         <Button as="link" href="/" variant="cta" className="p-4 flex gap-2 items-center rounded-md">
                             <ShoppingCartIcon size={28}/> Ver jogos
-                        </Button> 
+                        </Button>
                     </CardContent>
                 </Card>
             </div>
         );
-    } 
-    
+    }
+
 
   return (
-    <main className="h-screen bg-gradient-to-b from-night-soft via-night-soft to-night flex flex-col items-center justify-center">
+    <main className="h-screen bg-gradient-to-b from-base-soft via-base-soft to-base flex flex-col items-center justify-center">
         <header className="mb-10 w-fit bg-white/5 text-white rounded-xl p-4 border border-white/8 backdrop-blur-sm">
             <h1 className="text-2xl text-center px-10">Meus Jogos</h1>
         </header>
@@ -58,10 +58,10 @@ function LibraryPage() {
                     const cartItem = { id_game: game.id_game!, title: game.title, price: game.price, image: game.image, categories: game.categories}
 
                     return(
-                        <GameCard 
+                        <GameCard
                             game={game}
-                            onCart={() => alreadyInCart 
-                                ? removeItemFromCart(game.id_game!) 
+                            onCart={() => alreadyInCart
+                                ? removeItemFromCart(game.id_game!)
                                 : addItemToCart(cartItem)
                             }
                             onBuy={() => addItemToCart(cartItem, "cart")}
@@ -69,8 +69,8 @@ function LibraryPage() {
                             isAlreadyInCart={alreadyInCart}
                             key={game.id_game}
                             isOwned={isOwned(game.id_game)}
-                        /> 
-                    ) 
+                        />
+                    )
                 })}
             </div>
         </div>

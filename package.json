@@ -1,6 +1,6 @@
 {
   "name": "moonlightdevops",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Repositório feito para versionamento em produção das duas partes do nosso projeto principal",
   "main": "index.js",
   "scripts": {

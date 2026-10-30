@@ -11,7 +11,21 @@ test.describe('CRUD de Categorias', () => {
     await loginAsAdmin(page);
     await page.goto('/admin/categories');
 
-    await expect(page.locator('.rdt_Table')).toBeVisible();
+    // tabela existe
+    const table = page.getByRole('table');
+    await expect(table).toBeVisible();
+
+    // colunas esperadas
+    await expect(page.getByRole('columnheader', { name: 'Nome' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Descrição' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Ações' })).toBeVisible();
+
+    // pelo menos uma linha de dados
+    await expect(page.locator('tbody tr').first()).toBeVisible();
+
+    // ações da primeira linha ainda têm id estável (bom manter)
+    await expect(page.locator('#cat-edit-btn-0')).toBeVisible();
+    await expect(page.locator('#cat-delete-btn-0')).toBeVisible();
   });
 
   test('cadastrar: sucesso ao criar nova categoria', async ({ page }) => {
@@ -75,16 +89,16 @@ test.describe('CRUD de Categorias', () => {
     await loginAsAdmin(page);
     await page.goto('/admin/categories');
 
-    const primeiraLinha = page.locator('#row-0').first();
-    const nomeAntes = await primeiraLinha.locator('.rdt_TableCell').first().innerText();
+    await page.fill('input#category-name-search', nomeCategoriaEditada);
+    await page.click('button#category-name-search-desktop-btn');
 
-    // Clica no botão de deletar (segundo botão da linha)
-    await page.click('button#cat-delete-btn-0');
+    const row = page.locator('tbody tr').filter({ hasText: nomeCategoriaEditada });
+    await expect(row).toBeVisible();
 
-    // Cancela o modal
+    await row.locator('button#cat-delete-btn-0').click();
     await page.click('button#modal-cancel-btn');
 
-    await expect(page.locator(`text=${nomeAntes}`)).toBeVisible();
+    await expect(row).toBeVisible();
   });
 
   test('excluir: sucesso ao excluir categoria', async ({ page }) => {
@@ -94,10 +108,18 @@ test.describe('CRUD de Categorias', () => {
     await page.fill('input#category-name-search', nomeCategoriaEditada);
     await page.click('button#category-name-search-desktop-btn');
 
-    await page.click('button#cat-delete-btn-0');
+    const row = page.locator('tbody tr').filter({ hasText: nomeCategoriaEditada });
+    await expect(row).toBeVisible();
+
+    // Espera o botão estável depois do re-render do filtro
+    const deleteBtn = row.locator('button#cat-delete-btn-0');
+    await expect(deleteBtn).toBeVisible();
+    await deleteBtn.click();
 
     await page.click('button#modal-confirm-btn');
 
-    await expect(page.locator(`text=${nomeCategoriaEditada}`)).not.toBeVisible();
+    await expect(
+      page.locator('tbody tr').filter({ hasText: nomeCategoriaEditada })
+    ).toHaveCount(0);
   });
 });

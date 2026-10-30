@@ -15,6 +15,7 @@ import CategoryPage from "../pages/Customer/Category/CategoryPage";
 import OrderPage from "../pages/Customer/User/Order/OrderPage";
 import LibraryPage from "../pages/Customer/User/Library/LibraryPage";
 import { CatalogPage } from "../pages/Customer/Catalog/CatalogPage";
+import AboutUsPage from "../pages/Customer/AboutUs/AboutUsPage";
 
 export const AppRoutesCustomer = (
     <Route element={<CustomerLayout/>}>
@@ -25,6 +26,7 @@ export const AppRoutesCustomer = (
         <Route path="/cart" element={<CartPage />} />
         <Route path="/categories/:id" element={<CategoryPage />} />
         <Route path="/catalog" element={<CatalogPage />} />
+        <Route path="/about" element={<AboutUsPage/>}/>
 
         {/* rotas protegidas */}
         <Route path="/profile" element={

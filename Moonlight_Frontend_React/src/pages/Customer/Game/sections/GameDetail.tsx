@@ -8,6 +8,7 @@ import { Spinner } from "../../../../components/common/Generic/Spinner";
 import { formatCurrency } from "../../../../utils/currencyFormatter/formatCurrency";
 import { useContext } from "react";
 import { LibraryContext } from "../../../../hooks/library/useLibrary";
+import { resolveImageUrl } from "../../../../utils/resolveImage/resolveImageUrl";
 
 type GameDetailProps = {
     id_game: number;
@@ -22,8 +23,8 @@ export function GameDetail({id_game} : GameDetailProps){
 
     if (isLoading) {
         return (
-            <div className="w-full h-screen bg-gradient-to-b from-night-soft via-night-soft to-night flex items-center justify-center">
-                <Spinner variant="primary" />
+            <div className="w-full h-screen bg-gradient-to-b from-base-soft via-base-soft to-base flex items-center justify-center">
+                <Spinner />
             </div>
         );
     }
@@ -42,8 +43,8 @@ export function GameDetail({id_game} : GameDetailProps){
             <div className="flex max-lg:pt-4 max-lg:flex-col max-lg:w-full max-lg:flex-wrap lg:flex-row lg:flex-nowrap lg:p-2 lg:pl-20 lg:pb-4 lg:gap-18">
                 <section className="lg:w-2/3">
                     <img
-                        className="w-full object-cover h-full min-h-[400px] rounded-xl max-lg:justify-self-center max-lg:w-[90vw]"
-                        src={game.banner_image}
+                        className="w-full object-contain h-full min-h-[400px] rounded-xl max-lg:justify-self-center max-lg:w-[90vw]"
+                        src={`${resolveImageUrl(game.banner_image)}`}
                         alt={game.title}
                     />
                 </section>

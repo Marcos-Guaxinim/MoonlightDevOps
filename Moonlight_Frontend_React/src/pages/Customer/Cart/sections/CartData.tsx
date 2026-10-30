@@ -4,6 +4,7 @@ import { formatCurrency } from "../../../../utils/currencyFormatter/formatCurren
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import type { CartItem } from "../../../../@types/common/cartItem";
+import { resolveImageUrl } from "../../../../utils/resolveImage/resolveImageUrl";
 
 // CartData.tsx
 type CartDataProps = {
@@ -11,7 +12,7 @@ type CartDataProps = {
     onRemove: (id_game: number) => void;
     onClear: () => void;
     totalPrice: number;
-    isAuthenticated: boolean; 
+    isAuthenticated: boolean;
 
 }
 
@@ -31,8 +32,8 @@ export function CartData({ items, onRemove, onClear, totalPrice, isAuthenticated
     <div className="flex flex-col gap-4">
       {items.map(item => (
         <div key={item.id_game} className="flex gap-4 items-center bg-white/5 border border-white/10 rounded-xl p-4">
-          <img src={item.image} alt={item.title} className="w-24 h-16 object-cover rounded-lg shrink-0" />
-          <div className="flex-1 min-w-0"> 
+          <img src={`${resolveImageUrl(item.image)}`} alt={item.title} className="w-24 h-16 object-cover rounded-lg shrink-0" />
+          <div className="flex-1 min-w-0">
               <p className="text-white font-medium truncate">{item.title}</p>
               <p className="text-slate-400 text-sm line-clamp-1">{item.categories?.join(", ")}</p>
           </div>
@@ -56,7 +57,7 @@ export function CartData({ items, onRemove, onClear, totalPrice, isAuthenticated
             <p className="text-sm text-slate-400">Total</p>
             <p className="text-xl text-white font-medium">{totalPrice == 0 ? 'Gratuito' : `${formatCurrency(totalPrice)}`}</p>
           </div>
-          {isAuthenticated 
+          {isAuthenticated
               ? <Button as="link" href="/checkout" variant="cta" className="px-6 py-2 rounded-md">
                   Finalizar compra
                 </Button>

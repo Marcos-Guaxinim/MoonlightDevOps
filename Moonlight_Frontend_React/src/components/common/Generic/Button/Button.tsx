@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import type { ButtonProps } from "./Button.types";
 
   const variantClass = {
-    primary: "bg-night text-white transition-all duration-300 max-lg:active:bg-night-hover max-lg:active:scale-95 max-lg:active:text-text-night-hover lg:hover:bg-night-hover lg:hover:text-text-night-hover",
-    secondary: "bg-night-soft/60 text-white transition-all duration-200 hover:bg-night-soft/80 hover:scale-105 active:scale-95",
+    primary: "bg-base text-white transition-all duration-300 max-lg:active:bg-base-hover max-lg:active:scale-95 max-lg:active:text-text-base-hover lg:hover:bg-base-hover lg:hover:text-text-base-hover",
+    secondary: "bg-base-soft/60 text-white transition-all duration-200 hover:bg-base-soft/80 hover:scale-105 active:scale-95",
     cta: "bg-blue-cta text-white transition-all duration-300 max-lg:active:bg-blue-cta-hover max-lg:active:scale-95 lg:hover:bg-blue-cta-hover lg:hover:scale-105",
     transparent: "bg-transparent",
     danger: "bg-red-600 text-white transition-all duration-300 max-lg:active:bg-red-700 max-lg:active:scale-95 lg:hover:bg-red-700 lg:hover:scale-105"

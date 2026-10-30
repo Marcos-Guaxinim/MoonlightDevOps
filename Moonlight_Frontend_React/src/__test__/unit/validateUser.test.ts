@@ -2,14 +2,14 @@ import { describe, it, expect } from 'vitest';
 import { validateUser } from '../../utils/Validation/Admin/ValidateUser';
 
 describe('validateUser Unit Test', () => {
-  
+
   const validUser = {
     name: 'Arthur Pelito',
     email: 'arthur@teste.com',
     password: 'Password123!',
     confirmPassword: 'Password123!',
     cpf: '12345678901', // Supondo que isCPFValid aceite apenas números
-    type: 'admin'
+    id_roles: [1]
   };
 
   it('deve retornar isValid: false se as senhas não coincidirem', () => {

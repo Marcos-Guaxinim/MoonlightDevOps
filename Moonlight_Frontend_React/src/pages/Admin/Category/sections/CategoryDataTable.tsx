@@ -10,20 +10,18 @@ import { useCategoryTable } from "../../../../hooks/tables/useCategoryTable";
 import { useCategoryFilters } from "../../../../hooks/filters/admin/useCategoryFilters";
 import { useFetchCategoriesTable } from "../../../../hooks/fetchItems/table/useFetchCategoriesTable";
 
-
 export function CategoryDataTable() {
   const { filters } = useCategoryFilters();
   const { updateURLParam } = useUpdateUrlParam();
   const [name, setName] = useState(filters.name ?? "");
 
   const query: CategoryPaginatedQueryPayload = useMemo(() => ({
-      page: 1,
       limit: 5,
       random: false,
       name: filters.name,
   }), [filters.name]);
 
-  const {categories, isLoading, refetch, onPageChange, totalRows} = useFetchCategoriesTable(query);
+  const {categories, isLoading, refetch, internalPage, setInternalPage, totalRows } = useFetchCategoriesTable(query);
   const { CategoryColumns, confirmDeleteId, setConfirmDeleteId, handleDelete } = useCategoryTable(refetch);
 
   return (
@@ -67,7 +65,9 @@ export function CategoryDataTable() {
               </Button>
             </div>
           }
-          onPageChange={onPageChange}
+          pageSize={query.limit}
+          currentPage={internalPage}
+          onPageChange={setInternalPage}
           totalRows={totalRows}
         />
     </>

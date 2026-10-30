@@ -14,7 +14,7 @@ export function CheckoutSuccessPage() {
 
 
     return (
-        <main className="min-h-screen bg-gradient-to-b from-night-soft via-night-soft to-night flex flex-col items-center justify-center">
+        <main className="min-h-screen bg-gradient-to-b from-base-soft via-base-soft to-base flex flex-col items-center justify-center">
             <Card variant="primary" className="p-8 animate-fade-in">
                 <CardHeader><h1 className="text-center text-3xl font-bold text-white">🥳 Compra Aprovada!</h1></CardHeader>
                 <CardContent className="flex flex-col gap-4">
@@ -32,4 +32,3 @@ export function CheckoutSuccessPage() {
         </main>
     );
 }
-

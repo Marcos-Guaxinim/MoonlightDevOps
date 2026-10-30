@@ -1,5 +1,6 @@
 import type { GameResponseDTO } from "../../../../@types/game/game.dto";
 import { Button } from "../../../../components/common/Generic/Button/Button";
+import { resolveImageUrl } from "../../../../utils/resolveImage/resolveImageUrl";
 
 type HeroSectionProps = {
     game: GameResponseDTO
@@ -9,7 +10,7 @@ export function HeroSection({game} : HeroSectionProps){
     return(
             <section className="relative h-[85vh] min-h-[600px] w-full overflow-hidden">
                 <img
-                    src={game.banner_image}
+                    src={`${resolveImageUrl(game.banner_image)}`}
                     alt={game.title}
                     className="absolute inset-0 h-full w-full object-cover"
                 />

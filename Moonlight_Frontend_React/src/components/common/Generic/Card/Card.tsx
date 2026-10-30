@@ -23,5 +23,5 @@ export function Card({children, variant = "primary", className = ""} : CardProps
             {children}
         </div>
     )
-    
+
 }
